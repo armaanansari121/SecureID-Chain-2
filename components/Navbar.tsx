@@ -3,6 +3,8 @@ import { client } from "@/app/web3/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ConnectButton } from "thirdweb/react";
+import Image from "next/image";
+import logo from "../public/walmart-logo.png";
 
 const Navbar: React.FC = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -27,9 +29,19 @@ const Navbar: React.FC = () => {
     >
       <div className="bg-opacity-90 bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold">
-            SecureID Chain
-          </Link>
+          <div className="flex items-center space-x-2">
+            <Image
+              src={logo}
+              alt="Walmart Logo"
+              width={40} // Adjust width as needed
+              height={40} // Adjust height as needed
+              className="rounded-md" // Optional styling
+            />
+            <Link href="/" className="text-2xl font-bold">
+              SecureID Chain
+            </Link>
+          </div>
+
           <div className="space-x-4 flex items-center">
             <Link href="/employee-idcard" className="hover:text-gray-300">
               Employee-Card

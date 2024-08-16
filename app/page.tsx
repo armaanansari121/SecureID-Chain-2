@@ -2,6 +2,8 @@
 import { NextPage } from "next";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import logo from "../public/walmart-logo.png";
 
 // Dynamically import client components to ensure server-side rendering
 const ParallaxSection = dynamic(() => import("@/components/ParallaxSection"), {
@@ -17,7 +19,16 @@ const Home: NextPage = () => {
       <main>
         <ParallaxSection>
           <div className="text-center text-white">
-            <h1 className="text-6xl font-bold mb-4">SecureID Chain</h1>
+            <div className="flex justify-center items-center">
+              <Image
+                src={logo}
+                alt="Walmart Logo"
+                width={76} // Adjust width as needed
+                height={76} // Adjust height as needed
+                className="rounded-md" // Optional styling
+              />
+              <h1 className="text-6xl font-bold mb-4">SecureID Chain</h1>
+            </div>
             <h2 className="text-2xl mb-8">
               Revolutionizing Identity Management with Blockchain Technology
             </h2>
