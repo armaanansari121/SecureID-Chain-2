@@ -28,7 +28,7 @@ const RolesPage: FC = () => {
           const accounts = await web3.eth.requestAccounts();
           const account = accounts[0];
 
-          const hasRole = await contract.methods
+          const hasRole: any = await contract.methods
             .hasRole(HR_ROLE, account)
             .call();
 

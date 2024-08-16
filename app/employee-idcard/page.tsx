@@ -70,8 +70,9 @@ const EmployeeDetails: NextPage = () => {
             idManagementAddress
           );
 
-          const employeeData =
-            (await IdContract.methods.getEmployee(employeeAddress).call()) as EmployeeDataFromContract;
+          const employeeData = (await IdContract.methods
+            .getEmployee(employeeAddress)
+            .call()) as EmployeeDataFromContract;
 
           setEmployee({
             name: employeeData.name,
@@ -169,11 +170,19 @@ const EmployeeDetails: NextPage = () => {
             <div className="mb-6">
               <Button
                 variant="outline"
-                className="bg-blue-600 text-white"
+                className="bg-blue-600 text-white mx-2"
                 onClick={openModal}
               >
                 View Certifications
               </Button>
+              <a
+                href="/employee-idcard/attempt-access"
+                className="inline-block mx-2"
+              >
+                <Button variant="outline" className="bg-blue-600 text-white">
+                  Attempt Access
+                </Button>
+              </a>
             </div>
 
             {isModalOpen && (
