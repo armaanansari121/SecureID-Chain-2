@@ -36,6 +36,18 @@ const AddOptions: FC = () => {
               </a>
             </div>
           </Card>
+          <Card className="bg-white p-6 rounded-lg shadow-md w-1/3">
+            <div className="text-center">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Update Employee
+              </h2>
+              <a href="/hr/update-employee" className="inline-block">
+                <Button variant="outline" className="bg-blue-600 text-white">
+                  Update Employee
+                </Button>
+              </a>
+            </div>
+          </Card>
         </div>
       </main>
     </div>
