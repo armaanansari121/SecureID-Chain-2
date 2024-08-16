@@ -17,7 +17,10 @@ import checkpointManagementABI from "../../web3/abis/checkpointManagement.json";
 
 const UpdateCheckpointForm: FC = () => {
   const [checkpointId, setCheckpointId] = useState<number>(0);
-  const [active, setActive] = useState<string>("true"); // Default to "Active"
+  const [active, setActive] = useState<string>("true");
+  const [newRoles, setNewRoles] = useState<string>("");
+  const [newLatitude, setNewLatitude] = useState<string>("");
+  const [newLongitude, setNewLongitude] = useState<string>("");
 
   const handleUpdateCheckpoint = async (e: any) => {
     e.preventDefault();
@@ -31,9 +34,15 @@ const UpdateCheckpointForm: FC = () => {
 
         const accounts = await web3.eth.requestAccounts();
         const account = accounts[0];
-
+        const rolesArray = newRoles.split(",").map((role) => role.trim());
         await contract.methods
-          .updateCheckpoint(checkpointId, active === "true")
+          .updateCheckpoint(
+            checkpointId,
+            active === "true",
+            rolesArray,
+            newLatitude,
+            newLongitude
+          )
           .send({ from: account });
 
         console.log("Checkpoint updated successfully");
@@ -73,6 +82,42 @@ const UpdateCheckpointForm: FC = () => {
               <SelectItem value="false">Inactive</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            New Roles (comma-separated)
+          </label>
+          <Input
+            type="text"
+            placeholder="Enter new roles"
+            value={newRoles}
+            onChange={(e) => setNewRoles(e.target.value)}
+            className="mt-1 block w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            New Latitude
+          </label>
+          <Input
+            type="text"
+            placeholder="Enter new latitude"
+            value={newLatitude}
+            onChange={(e) => setNewLatitude(e.target.value)}
+            className="mt-1 block w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            New Longitude
+          </label>
+          <Input
+            type="text"
+            placeholder="Enter new longitude"
+            value={newLongitude}
+            onChange={(e) => setNewLongitude(e.target.value)}
+            className="mt-1 block w-full"
+          />
         </div>
         <Button className="mt-4 w-full" type="submit">
           Update Checkpoint
