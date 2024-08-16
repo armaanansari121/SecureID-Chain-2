@@ -12,6 +12,7 @@ import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import "@reach/dialog/styles.css";
 import { Gateway_url } from "@/config";
 import { Button } from "@/components/ui/button";
+import logo from "../../public/walmart-logo.png";
 
 interface LocationRecord {
   latitude: string;
@@ -145,11 +146,21 @@ const EmployeeDetails: NextPage = () => {
         <h1 className="text-4xl font-bold text-white mb-8 text-center">
           Employee Details
         </h1>
+
         <Card className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {employee.name}
-            </h2>
+            <div className="flex justify-center items-center">
+              <Image
+                src={logo}
+                alt="Walmart Logo"
+                width={40} // Adjust width as needed
+                height={40} // Adjust height as needed
+                className="rounded-md" // Optional styling
+              />
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                {employee.name}
+              </h2>
+            </div>
             <h3 className="text-xl text-gray-600 mb-4">{employee.role}</h3>
             <div className="relative w-32 h-32 mx-auto mb-4">
               <Image
