@@ -1,6 +1,5 @@
 // pages/index.tsx
 import { NextPage } from "next";
-import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 
