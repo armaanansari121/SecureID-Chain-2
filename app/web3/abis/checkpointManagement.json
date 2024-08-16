@@ -130,6 +130,12 @@
         "internalType": "string",
         "name": "newLongitude",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "newRoles",
+        "type": "string[]"
       }
     ],
     "name": "CheckpointUpdated",
@@ -399,6 +405,11 @@
         "internalType": "uint256[]",
         "name": "timestamps",
         "type": "uint256[]"
+      },
+      {
+        "internalType": "string[][]",
+        "name": "allowedRoles",
+        "type": "string[][]"
       }
     ],
     "stateMutability": "view",

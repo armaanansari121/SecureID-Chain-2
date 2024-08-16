@@ -8,6 +8,7 @@ import Loader from "@/components/Loader";
 import { ethers } from "ethers";
 import { keccak256 } from "ethers"; // Ethers.js keccak256
 import CheckpointsList from "./CheckpointsList";
+import { Button } from "@/components/ui/button";
 
 const MANAGER_ROLE = keccak256(ethers.toUtf8Bytes("MANAGER_ROLE")); // Hashing the MANAGER_ROLE
 
@@ -65,9 +66,16 @@ const ManagerRolePage: FC = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-4xl font-semibold text-gray-700 text-center mb-8 mt-24">
-        Checkpoint List
-      </h1>
+      <div className="flex justify-evenly mb-8 mt-24">
+        <h1 className="text-4xl font-semibold text-gray-700 text-center ">
+          Checkpoint List
+        </h1>
+        <a href="/manager/checkpoints/map" className="inline-block">
+          <Button variant="outline" className="bg-blue-600 text-white">
+            View on Map
+          </Button>
+        </a>
+      </div>
       <div className="flex justify-center">
         <CheckpointsList />
       </div>

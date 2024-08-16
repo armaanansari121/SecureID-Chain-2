@@ -9,8 +9,10 @@ import checkpointManagementABI from "../../web3/abis/checkpointManagement.json";
 interface Checkpoint {
   id: number;
   name: string;
-  location: string;
+  latitude: string;
+  longitude: string;
   active: boolean;
+  allowedRoles: string[];
   timestamp: number;
 }
 
@@ -28,14 +30,17 @@ const CheckpointsList: FC = () => {
           );
 
           const data: any = await contract.methods.getAllCheckpoints().call();
+          console.log(data);
 
           const parsedCheckpoints = data[0].map(
             (id: number, index: number) => ({
               id,
               name: data[1][index],
-              location: data[2][index],
-              active: data[3][index],
-              timestamp: data[4][index],
+              latitude: data[2][index],
+              longitude: data[3][index],
+              active: data[4][index],
+              timestamp: data[5][index],
+              allowedRoles: data[6][index], // Assign allowed roles from the 2D array
             })
           );
 
@@ -58,7 +63,7 @@ const CheckpointsList: FC = () => {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {checkpoints.length > 0 ? (
           checkpoints.map((checkpoint) => (
-            <Card key={checkpoint.id} className="p-4 h-32">
+            <Card key={checkpoint.id} className="p-4 h-48">
               <div className="flex justify-between items-center mb-2">
                 <h2 className="text-lg font-semibold">{checkpoint.name}</h2>
                 <span
@@ -69,7 +74,15 @@ const CheckpointsList: FC = () => {
                   {checkpoint.active ? "Active" : "Inactive"}
                 </span>
               </div>
-              <p className="text-gray-600">{checkpoint.location}</p>
+              <p className="text-gray-600">Latitude: {checkpoint.latitude}</p>
+              <p className="text-gray-600">Longitude: {checkpoint.longitude}</p>
+              <p className="text-gray-600">Roles:</p>
+              <ul className="list-disc list-inside text-gray-600">
+                {checkpoint.allowedRoles.map((role, index) => (
+                  <li key={index}>{role}</li>
+                ))}
+              </ul>
+
               <p className="text-gray-400 text-sm">
                 Last Updated:{" "}
                 {new Date(Number(checkpoint.timestamp) * 1000).toLocaleString()}
