@@ -34,6 +34,9 @@ const Navbar: React.FC = () => {
             <Link href="/employee-idcard" className="hover:text-gray-300">
               Employee-Card
             </Link>
+            <Link href="/tracking" className="hover:text-gray-300">
+              Tracking
+            </Link>
             <Link href="/dashboard" className="hover:text-gray-300">
               Dashboard
             </Link>
