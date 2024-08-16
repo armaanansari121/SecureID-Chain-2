@@ -1,46 +1,80 @@
 // manager/all-employee/[address]/page.tsx
+"use client";
 
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
+import Web3 from "web3";
+import Loader from "@/components/Loader";
+import idManagementABI from "../../../web3/abis/idManagement.json";
+import { idManagementAddress } from "../../../web3/client";
+
+// Dynamically load the Map component
+const Map = dynamic(() => import("./Map.tsx"), { ssr: false });
 
 const EmployeePage = () => {
-  const router = useRouter();
-  const { address } = router.query; // Extract the address from the URL
-
-  const [employeeData, setEmployeeData] = useState(null);
+  const { address } = useParams(); // Extract the address from the URL
+  const [locationHistory, setLocationHistory] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(typeof address);
     if (address) {
-      // Fetch employee data from a blockchain or API using the address
-      fetchEmployeeData(address as string);
+      fetchLocationHistory(address);
     }
   }, [address]);
 
-  const fetchEmployeeData = async (address: string) => {
+  const fetchLocationHistory = async (employeeAddress: string) => {
     try {
-      // Example: Fetching from an API
-      const response = await fetch(`/api/employee/${address}`);
-      const data = await response.json();
-      setEmployeeData(data);
+      if (typeof window !== "undefined" && window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        const contract = new web3.eth.Contract(
+          idManagementABI,
+          idManagementAddress
+        );
+        const accounts = await web3.eth.requestAccounts();
+        const account = accounts[0];
+
+        // Fetch the location history from the smart contract
+        const data = await contract.methods
+          .getLocationHistory(employeeAddress)
+          .call({ from: account });
+
+        const { latitudes, longitudes, timestamps, checkpointIds } = data;
+
+        // Parse the data into a readable format
+        const parsedLocations = latitudes.map(
+          (latitude: string, index: number) => ({
+            latitude,
+            longitude: longitudes[index],
+            timestamp: new Date(
+              Number(timestamps[index]) * 1000
+            ).toLocaleString(),
+            checkpointId: Number(checkpointIds[index]),
+          })
+        );
+        console.log(parsedLocations);
+
+        setLocationHistory(parsedLocations);
+      } else {
+        console.error("Ethereum wallet is not available");
+      }
     } catch (error) {
-      console.error('Error fetching employee data:', error);
+      console.error("Error fetching location history:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (!employeeData) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <Loader />;
   }
 
   return (
     <div>
       <h1>Employee Details for Address: {address}</h1>
-      <div>
-        {/* <p>Name: {employeeData.name}</p>
-        <p>Role: {employeeData.role}</p>
-        <p>Active: {employeeData.active ? 'Yes' : 'No'}</p>
-        <p>Last Updated: {new Date(employeeData.lastUpdated * 1000).toLocaleString()}</p> */}
-        {/* Render more employee details as needed */}
-      </div>
+      {/* Display the Map and pass the location history as props */}
+      <Map locationHistory={locationHistory} />
     </div>
   );
 };
