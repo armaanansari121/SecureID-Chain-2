@@ -14,6 +14,7 @@ interface Employee {
   name: string;
   role: string;
   lastUpdated: string;
+  employeeAddress: string;
   active: boolean;
 }
 
@@ -28,6 +29,8 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
   const [certificateList, setCertificateList] = useState<string[]>([]);
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [contract, setContract] = useState<any>(null);
+  console.log("contract", contract);
+  console.log("data", data);
 
   useEffect(() => {
     const initWeb3 = async () => {
@@ -56,15 +59,25 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
       console.error("Contract not initialized");
       return [];
     }
-
+  
     try {
+      console.log("Fetching employee data for address:", employeeAddress);
       const employeeData = await contract.methods.getEmployee(employeeAddress).call();
+      console.log("Employee data fetched:", employeeData);
+      
+      if (!employeeData || !employeeData.certifications) {
+        console.error("No certifications found or employee data is null.");
+        return [];
+      }
+  
       return employeeData.certifications;
     } catch (error) {
-      console.error("Error fetching certificates", error);
+      console.error("Error fetching certificates:", error);
       return [];
     }
   };
+  
+
 
   const handleModalOpen = async (employeeAddress: string, event: React.MouseEvent) => {
     event.preventDefault(); // Prevent the default link behavior
@@ -75,12 +88,13 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
 
   const handleModalClose = () => setIsModalVisible(false);
 
+
   return (
     <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-40">
       {data.employeeAddeds.map((employee) => (
         <Link
-          href={`/manager/all-employee/${employee.id}`}
-          key={employee.id}
+          href={`/manager/all-employee/${employee.employeeAddress}`}
+          key={employee.employeeAddress}
           className="block"
         >
           <div className="p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -96,7 +110,7 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
             </p>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={(e) => handleModalOpen(employee.id, e)}
+              onClick={(e) => handleModalOpen(employee.employeeAddress, e)}
             >
               View Certificates
             </button>
