@@ -47,6 +47,7 @@ const AddEmployeeForm: FC = () => {
       }
 
       const resData = await res.json();
+      console.log("IPFS response:", resData);
       return resData.IpfsHash;
     } catch (error) {
       console.error("Error uploading file to IPFS:", error);
