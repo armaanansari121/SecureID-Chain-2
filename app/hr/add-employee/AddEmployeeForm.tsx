@@ -4,22 +4,9 @@ import { FC, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import Web3 from "web3";
 import { idManagementAddress } from "../../web3/client";
 import idManagementABI from "../../web3/abis/idManagement.json";
-
-const roles = [
-  { label: "Driver", value: "DRIVER_ROLE" },
-  { label: "Guard", value: "GUARD_ROLE" },
-];
-
 import { JWT_SECRET_ACCESS_TOKEN } from "../../../config";
 
 const AddEmployeeForm: FC = () => {
@@ -124,18 +111,14 @@ const AddEmployeeForm: FC = () => {
             <label className="block text-sm font-medium text-gray-700" htmlFor="employeeRole">
               Employee Role
             </label>
-            <Select onValueChange={(value) => setEmployeeRole(value)} required>
-              <SelectTrigger id="employeeRole">
-                <SelectValue placeholder="Select a Role" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.value} value={role.value}>
-                    {role.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input
+              id="employeeRole"
+              type="text"
+              placeholder="Enter role"
+              value={employeeRole}
+              onChange={(e) => setEmployeeRole(e.target.value)}
+              required
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700" htmlFor="employeeAddress">
