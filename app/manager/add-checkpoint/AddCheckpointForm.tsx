@@ -10,7 +10,8 @@ import checkpointManagementABI from "../../web3/abis/checkpointManagement.json";
 
 const AddCheckpointForm: FC = () => {
   const [checkpointName, setCheckpointName] = useState<string>("");
-  const [checkpointLocation, setCheckpointLocation] = useState<string>("");
+  const [latitude, setLatitude] = useState<string>("");
+  const [longitude, setLongitude] = useState<string>("");
   const [allowedRoles, setAllowedRoles] = useState<string>("");
 
   const handleAddCheckpoint = async (e: any) => {
@@ -29,8 +30,9 @@ const AddCheckpointForm: FC = () => {
         // Splitting allowedRoles string into an array
         const rolesArray = allowedRoles.split(",").map((role) => role.trim());
 
+        // Call the smart contract function with the new parameters
         await contract.methods
-          .addCheckpoint(checkpointName, checkpointLocation, rolesArray)
+          .addCheckpoint(checkpointName, latitude, longitude, rolesArray)
           .send({ from: account });
 
         console.log("Checkpoint added successfully");
@@ -59,13 +61,25 @@ const AddCheckpointForm: FC = () => {
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Checkpoint Location
+            Latitude
           </label>
           <Input
             type="text"
-            placeholder="Enter checkpoint location"
-            value={checkpointLocation}
-            onChange={(e) => setCheckpointLocation(e.target.value)}
+            placeholder="Enter latitude"
+            value={latitude}
+            onChange={(e) => setLatitude(e.target.value)}
+            className="mt-1 block w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Longitude
+          </label>
+          <Input
+            type="text"
+            placeholder="Enter longitude"
+            value={longitude}
+            onChange={(e) => setLongitude(e.target.value)}
             className="mt-1 block w-full"
           />
         </div>
