@@ -13,7 +13,7 @@ interface Employee {
   id: string;
   name: string;
   role: string;
-  lastUpdated: string;
+  lastUpdated: string; // Keep as string for easy handling in JSX
   employeeAddress: string;
   active: boolean;
 }
@@ -76,8 +76,6 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
       return [];
     }
   };
-  
-
 
   const handleModalOpen = async (employeeAddress: string, event: React.MouseEvent) => {
     event.preventDefault(); // Prevent the default link behavior
@@ -88,6 +86,11 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
 
   const handleModalClose = () => setIsModalVisible(false);
 
+  // Helper function to convert epoch timestamp to human-readable date
+  const convertTimestampToDate = (timestamp: string) => {
+    const date = new Date(Number(timestamp) * 1000); // Convert to milliseconds
+    return date.toLocaleString(); // Format date to local string
+  };
 
   return (
     <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-40">
@@ -103,7 +106,7 @@ const ManagerData: React.FC<ManagerDataProps> = ({ data }) => {
               <span className="font-medium">Role: </span>{employee.role}
             </p>
             <p className="text-gray-600">
-              <span className="font-medium">Last Updated: </span>{employee.lastUpdated}
+              <span className="font-medium">Last Updated: </span>{convertTimestampToDate(employee.lastUpdated)}
             </p>
             <p className="text-gray-600">
               <span className="font-medium">Active: </span>{employee.active ? 'Yes' : 'No'}

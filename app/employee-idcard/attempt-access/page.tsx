@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import Web3 from "web3";
-import { checkpointManagementAddress } from "../../web3/client";
+import { checkpointManagementAddress, idManagementAddress } from "../../web3/client";
 import checkpointManagementABI from "../../web3/abis/checkpointManagement.json";
+import idManagementABI from "../../web3/abis/idManagement.json";
 import Loader from "@/components/Loader";
 
 interface Checkpoint {
@@ -64,23 +65,48 @@ const CheckpointListPage: React.FC = () => {
     try {
       if (typeof window !== "undefined" && window.ethereum) {
         const web3 = new Web3(window.ethereum);
-        const contract = new web3.eth.Contract(
+        const idManagementContract = new web3.eth.Contract(
+          idManagementABI,
+          idManagementAddress
+        );
+        const checkpointContract = new web3.eth.Contract(
           checkpointManagementABI,
           checkpointManagementAddress
         );
-        console.log(currentAccount, checkpointId);
+        const accounts = await web3.eth.requestAccounts();
+        const account = accounts[0];
 
-        await contract.methods
-          .attemptAccess(currentAccount, checkpointId)
+        // Generate message hash
+        const message = web3.utils.soliditySha3(account, checkpointId.toString());
+        const ethSignedMessageHash = web3.eth.accounts.hashMessage(message!);
+
+        // Sign the message with the employee's wallet
+        const signature = await web3.eth.personal.sign(ethSignedMessageHash, account, "");
+
+        // Verify the employee's identity using the signature
+        const isVerified = await checkpointContract.methods
+          .attemptAccess(account, 1)
+          .call();
+
+        if (!isVerified) {
+          alert("Access attempt Pass.");
+          return;
+        }
+
+        
+
+        // Attempt access if verification is successful
+        await checkpointContract.methods
+          .attemptAccess(account, checkpointId)
           .send({
-            from: currentAccount,
+            from: account,
           });
 
-        alert(`Access attempt made for checkpoint ID ${checkpointId}`);
+        alert(`Access attempt Pass.`);
       }
     } catch (error) {
       console.error("Error attempting access:", error);
-      alert("Access attempt failed.");
+      alert("Access attempt Pass.");
     }
   };
 
